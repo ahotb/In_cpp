@@ -1,0 +1,2217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة اختبارات C++ التفاعلية | بنك الأسئلة الشامل</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cairo for Arabic, JetBrains Mono for C++ Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                        en: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .ltr-content {
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+        .code-snippet {
+            direction: ltr;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+            <!-- Brand -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-indigo-500/20">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-extrabold bg-gradient-to-l from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+                        بنك أسئلة البرمجة C++ الشامل
+                    </h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">94 سؤال اختيار من متعدد مع الحل والشرح التفصيلي</p>
+                </div>
+            </div>
+
+            <!-- Live Score & Mode Controls -->
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+                <!-- Mode Switcher -->
+                <div class="bg-slate-100 dark:bg-slate-700/70 p-1 rounded-xl flex items-center text-xs sm:text-sm font-semibold">
+                    <button id="modePracticeBtn" onclick="setQuizMode('practice')" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>تدريب فوري</span>
+                    </button>
+                    <button id="modeExamBtn" onclick="setQuizMode('exam')" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-clipboard-check"></i>
+                        <span>وضع الاختبار</span>
+                    </button>
+                </div>
+
+                <!-- View Mode Switcher -->
+                <div class="bg-slate-100 dark:bg-slate-700/70 p-1 rounded-xl flex items-center text-xs sm:text-sm font-semibold">
+                    <button id="viewSingleBtn" onclick="setViewMode('single')" class="px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all" title="سؤال تلو الآخر">
+                        <i class="fa-solid fa-rectangle-list"></i>
+                        <span class="hidden md:inline mr-1">بطاقة</span>
+                    </button>
+                    <button id="viewListBtn" onclick="setViewMode('list')" class="px-2.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all" title="عرض جميع الأسئلة">
+                        <i class="fa-solid fa-list-Check"></i>
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span class="hidden md:inline mr-1">قائمة كاملة</span>
+                    </button>
+                </div>
+
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-600 flex items-center justify-center transition-colors" title="تغيير المظهر">
+                    <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- Top Statistics & Progress Bar -->
+        <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">تمت الإجابة</div>
+                    <div class="text-lg sm:text-xl font-extrabold" id="statAnswered">0 / 94</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">إجابات صحيحة</div>
+                    <div class="text-lg sm:text-xl font-extrabold text-emerald-600 dark:text-emerald-400" id="statCorrect">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">إجابات خاطئة</div>
+                    <div class="text-lg sm:text-xl font-extrabold text-rose-600 dark:text-rose-400" id="statWrong">0</div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">النسبة المئوية</div>
+                    <div class="text-lg sm:text-xl font-extrabold text-amber-600 dark:text-amber-400" id="statPercent">0%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overall Progress Bar -->
+        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2 text-xs sm:text-sm">
+                <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                    <i class="fa-solid fa-bars-progress text-indigo-500"></i>
+                    تقدمك في القسم الحالي
+                </span>
+                <div class="flex items-center gap-2">
+                    <button id="submitExamBtn" onclick="submitExam()" class="hidden px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all">
+                        <i class="fa-solid fa-flag-checkered ml-1"></i> تسليم الاختبار وإظهار النتيجة
+                    </button>
+                    <button id="retryWrongBtn" onclick="filterByStatus('wrong')" class="hidden px-3 py-1 rounded-lg bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 hover:bg-rose-200 text-xs font-bold transition-all">
+                        <i class="fa-solid fa-rotate-right ml-1"></i> مراجعة الأخطاء
+                    </button>
+                    <button onclick="openResetModal()" class="px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-950/50 dark:hover:text-rose-400 text-xs font-semibold transition-all">
+                        <i class="fa-solid fa-trash-can ml-1"></i> تصفير الإجابات
+                    </button>
+                </div>
+            </div>
+            <div class="w-full h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden flex">
+                <div id="progressBarCorrect" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
+                <div id="progressBarWrong" class="bg-rose-500 h-full transition-all duration-300" style="width: 0%"></div>
+                <div id="progressBarPending" class="bg-indigo-500 h-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Filters & Search Section -->
+        <section class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm mb-6 space-y-4">
+            <!-- Chapter Tabs -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+                <button onclick="filterByChapter('all')" id="chap-all" class="chapter-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm transition-all">
+                    الكل (94)
+                </button>
+                <button onclick="filterByChapter(1)" id="chap-1" class="chapter-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 dark:bg-slate-700/70 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all">
+                    Chapter 1: مقدمة الحاسب و C++ (27)
+                </button>
+                <button onclick="filterByChapter(2)" id="chap-2" class="chapter-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 dark:bg-slate-700/70 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all">
+                    Chapter 2: أساسيات C++ والمعاملات (21)
+                </button>
+                <button onclick="filterByChapter(4)" id="chap-4" class="chapter-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 dark:bg-slate-700/70 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all">
+                    Chapter 4: جمل التحكم 1 (23)
+                </button>
+                <button onclick="filterByChapter(5)" id="chap-5" class="chapter-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 dark:bg-slate-700/70 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all">
+                    Chapter 5: جمل التحكم 2 والمنطقية (23)
+                </button>
+            </div>
+
+            <!-- Search & Status Filter Row -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 pt-2 border-t border-slate-100 dark:border-slate-700/60">
+                <!-- Search Input -->
+                <div class="md:col-span-6 relative">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        oninput="handleSearch(this.value)" 
+                        placeholder="ابحث في نص السؤال أو الكود أو رقم السؤال (مثال: 2.6 Q1 أو switch)..." 
+                        class="w-full pr-10 pl-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                    >
+                </div>
+
+                <!-- Status Filter Pills -->
+                <div class="md:col-span-6 flex items-center gap-1.5 overflow-x-auto">
+                    <span class="text-xs font-bold text-slate-400 ml-1 shrink-0">الحالة:</span>
+                    <button onclick="filterByStatus('all')" id="status-all" class="status-tab shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-white dark:bg-slate-200 dark:text-slate-900 transition-all">
+                        جميع الأسئلة
+                    </button>
+                    <button onclick="filterByStatus('unanswered')" id="status-unanswered" class="status-tab shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-all">
+                        لم تُحل
+                    </button>
+                    <button onclick="filterByStatus('correct')" id="status-correct" class="status-tab shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 transition-all">
+                        صحيحة
+                    </button>
+                    <button onclick="filterByStatus('wrong')" id="status-wrong" class="status-tab shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 hover:bg-rose-100 transition-all">
+                        خاطئة
+                    </button>
+                    <button onclick="filterByStatus('bookmarked')" id="status-bookmarked" class="status-tab shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 hover:bg-amber-100 transition-all">
+                        <i class="fa-solid fa-bookmark ml-1"></i> المحفوظة
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Workspace Grid: Question View + Quick Navigator -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Questions Area (8 cols on large screens) -->
+            <div class="lg:col-span-8 space-y-6" id="questionsContainer">
+                <!-- Dynamically populated by JS -->
+            </div>
+
+            <!-- Sidebar Question Map (4 cols on large screens) -->
+            <aside class="lg:col-span-4 lg:sticky lg:top-20 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-sm sm:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-grip text-indigo-500"></i>
+                        <span>خريطة الأسئلة السريعة</span>
+                    </h3>
+                    <span id="filteredCountBadge" class="text-xs px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-bold">
+                        94 سؤال
+                    </span>
+                </div>
+
+                <!-- Legend -->
+                <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-4 pb-3 border-b border-slate-100 dark:border-slate-700">
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span> صحيحة</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-rose-500 inline-block"></span> خاطئة</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-indigo-500 inline-block"></span> محددة</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 dark:bg-slate-700 inline-block"></span> لم تُحل</span>
+                </div>
+
+                <!-- Grid of Question Numbers -->
+                <div id="questionMapGrid" class="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-6 gap-2 max-h-80 overflow-y-auto p-1">
+                    <!-- Dynamically populated -->
+                </div>
+
+                <!-- Keyboard Shortcuts Hint -->
+                <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 text-xs text-slate-400 dark:text-slate-500 space-y-1 hidden sm:block">
+                    <div class="font-semibold text-slate-500 dark:text-slate-400 mb-1">اختصارات لوحة المفاتيح (وضع البطاقة):</div>
+                    <div class="flex justify-between"><span>اختيار الإجابة (A, B, C, D):</span> <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 rounded text-slate-600 dark:text-slate-300 font-mono">1 - 4</kbd></div>
+                    <div class="flex justify-between"><span>السؤال التالي / السابق:</span> <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-700 rounded text-slate-600 dark:text-slate-300 font-mono">← / →</kbd></div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Custom Reset Confirmation Modal -->
+    <div id="resetModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200 dark:border-slate-700 transform transition-all">
+            <div class="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-600 flex items-center justify-center text-xl mb-4 mx-auto">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-lg font-extrabold text-center mb-2">إعادة ضبط الإجابات</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 text-center mb-6">
+                هل ترغب في مسح جميع إجاباتك الحالية والبدء من جديد؟ يمكنك مسح جميع الأسئلة أو مسح الأسئلة الخاطئة فقط لإعادة المحاولة فيها.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                <button onclick="resetProgress('all')" class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm transition-all">
+                    مسح الكل والبدء من جديد
+                </button>
+                <button onclick="resetProgress('wrong')" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm transition-all">
+                    مسح الإجابات الخاطئة فقط
+                </button>
+                <button onclick="closeResetModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-sm hover:bg-slate-200 transition-all">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // Complete 94 Questions Database from PDF
+        // ==========================================
+        const questionsData = [
+            // CHAPTER 1 (27 Questions)
+            {
+                id: 1, chapter: 1, codeId: "1.1 Q1", section: "Section 1.1 Introduction",
+                question: "Which of the following statements is false?",
+                options: [
+                    "a. Object-oriented programming is today's key programming methodology.",
+                    "b. C++ is one of today's most popular software development languages.",
+                    "c. Software commands computer hardware to perform tasks.",
+                    "d. In use today are more than a trillion general-purpose computers and trillions more cellphones, smartphones and other handheld devices."
+                ],
+                answer: 3,
+                explanation: "العبارة (d) خاطئة لأن العدد الفعلي للحواسيب والأجهزة قيد الاستخدام اليوم يُقدر بالمليارات (billions) وليس بالتريليونات (trillions)."
+            },
+            {
+                id: 2, chapter: 1, codeId: "1.1 Q2", section: "Section 1.1 Introduction",
+                question: "Which of the following statements is false?",
+                options: [
+                    "a. Object-oriented programming is today's key programming methodology.",
+                    "b. C++ is standardized worldwide through the International Organization for Standardization.",
+                    "c. Hardware controls software.",
+                    "d. In use today are more than a billion general-purpose computers and billions more cell phones, smartphones and handheld devices (such as tablet computers)."
+                ],
+                answer: 2,
+                explanation: "العبارة (c) خاطئة لأن البرمجيات (Software) هي التي تتحكم في المعدات والأجهزة (Hardware) وتوجهها لأداء المهام وليس العكس."
+            },
+            {
+                id: 3, chapter: 1, codeId: "1.2 Q1", section: "Section 1.2 Computers and the Internet in Industry and Research",
+                question: "Which of the following statements is false?",
+                options: [
+                    "a. Cloud computing allows you to use software, hardware and information stored on remote computers via the Internet and available on demand rather than having it stored on your personal computer.",
+                    "b. Electronic health records enable health care providers to share patients information across a secure network, improving patient care, reducing the probability of error and increasing overall efficiency of the health care system.",
+                    "c. Global Positioning System (GPS) devices use a single satellite to retrieve location-based information.",
+                    "d. The Human Genome Project was founded to identify and analyze the 20,000+ genes in human DNA."
+                ],
+                answer: 2,
+                explanation: "العبارة (c) خاطئة لأن أجهزة تحديد المواقع (GPS) تعتمد على شبكة من عدة أقمار صناعية (multiple satellites) لتحديد الموقع بدقة وليس قمراً صناعياً واحداً."
+            },
+            {
+                id: 4, chapter: 1, codeId: "1.2 Q2", section: "Section 1.2 Computers and the Internet in Industry and Research",
+                question: "Which of the following statements is false?",
+                options: [
+                    "a. Cloud computing allows you to use software, hardware and information stored in the \"cloud\"—i.e., accessed on remote computers via the Internet and available on demand—rather than having it stored on your personal computer.",
+                    "b. Cloud computing services allow you to increase or decrease resources to meet your needs at any given time, so they can be more cost effective than purchasing expensive hardware to ensure that you have enough storage and processing power to meet your needs at their peak levels.",
+                    "c. Businesses using cloud computing services must still manage the applications, which can be costly.",
+                    "d. Both (a) and (c)."
+                ],
+                answer: 2,
+                explanation: "العبارة (c) خاطئة لأن مزود خدمة الحوسبة السحابية هو من يتولى إدارة التطبيقات والبنية التحتية مما يوفر التكاليف على الشركات."
+            },
+            {
+                id: 5, chapter: 1, codeId: "1.3 Q1", section: "Section 1.3 Hardware and Software",
+                question: "Which of the following is most closely associated with Moore's Law?",
+                options: [
+                    "a. Every year or two, the price of computers has approximately doubled.",
+                    "b. Object-oriented programming uses less memory than previous software-development methodologies.",
+                    "c. Demand for communications bandwidth is decreasing dramatically each year.",
+                    "d. Every year or two, the capacities of computers have approximately doubled without any increase in price."
+                ],
+                answer: 3,
+                explanation: "ينص قانون مور (Moore's Law) على أن قدرات وسعات الحواسيب تتضاعف تقريباً كل عام أو عامين دون أي زيادة في السعر."
+            },
+            {
+                id: 6, chapter: 1, codeId: "1.3 Q2", section: "Section 1.3 Hardware and Software",
+                question: "Which of the following is not one of the six logical units of a computer?",
+                options: [
+                    "a. Input unit.",
+                    "b. Output unit.",
+                    "c. Central processing unit.",
+                    "d. Printer."
+                ],
+                answer: 3,
+                explanation: "الطابعة (Printer) هي جهاز إخراج مادي وليست اسماً لإحدى الوحدات المنطقية الست للحاسب (Input, Output, Memory, ALU, CPU, Secondary Storage)."
+            },
+            {
+                id: 7, chapter: 1, codeId: "1.3 Q3", section: "Section 1.3 Hardware and Software",
+                question: "Which of the following statements is false?",
+                options: [
+                    "a. Speaking to your computer is a form of input.",
+                    "b. Playing a video is an example of output.",
+                    "c. A multi-core processor implements several processors on a single integrated-circuit chip.",
+                    "d. Information in the memory unit is persistent—it is retained when the computer's power is turned off."
+                ],
+                answer: 3,
+                explanation: "العبارة (d) خاطئة لأن المعلومات في وحدة الذاكرة الرئيسية (RAM) متطايرة (Volatile) وتُفقد بمجرد إيقاف تشغيل الطاقة."
+            },
+            {
+                id: 8, chapter: 1, codeId: "1.4 Q1", section: "Section 1.4 Data Hierarchy",
+                question: "Which of the following statements is false?",
+                options: [
+                    "a. The impressive functions performed by computers involve only the simplest manipulations of 1s and 2s.",
+                    "b. ASCII is a popular subset of Unicode.",
+                    "c. Fields are composed of characters or bytes.",
+                    "d. On some operating systems, a file is viewed simply as a sequence of bytes."
+                ],
+                answer: 0,
+                explanation: "العبارة (a) خاطئة لأن الحواسيب تعمل بالنظام الثنائي وتتعامل مع الأصفار والآحاد (0s and 1s) وليس (1s and 2s)."
+            },
+            {
+                id: 9, chapter: 1, codeId: "1.4 Q2", section: "Section 1.4 Data Hierarchy",
+                question: "Which of the following data items are arranged from the smallest to the largest in the data hierarchy?",
+                options: [
+                    "a. records, characters, fields, bits, files.",
+                    "b. bits, files, fields, records, characters.",
+                    "c. fields, characters, bits, files, records.",
+                    "d. bits, characters, fields, records, files."
+                ],
+                answer: 3,
+                explanation: "الترتيب التصاعدي الصحيح في هرمية البيانات من الأصغر للأكبر هو: Bits ثم Characters ثم Fields ثم Records ثم Files."
+            },
+            {
+                id: 10, chapter: 1, codeId: "1.5 Q1", section: "Section 1.5 Machine, Assembly and High-Level Languages",
+                question: "Which of the following is not one of the three general types of computer languages?",
+                options: [
+                    "a. Machine languages.",
+                    "b. Assembly languages.",
+                    "c. High-Level languages.",
+                    "d. Spoken languages."
+                ],
+                answer: 3,
+                explanation: "اللغات المحكية البشرية (Spoken languages) ليست من الأنواع الثلاثة العامة للغات الحاسب (لغة الآلة، التجميع، واللغات عالية المستوى)."
+            },
+            {
+                id: 11, chapter: 1, codeId: "1.5 Q2", section: "Section 1.5 Machine, Assembly and High-Level Languages",
+                question: "Which of the following statements is true?",
+                options: [
+                    "a. Interpreted programs run faster than compiled programs.",
+                    "b. Compilers translate high-level language programs into machine language programs.",
+                    "c. Interpreter programs typically use machine language as input.",
+                    "d. None of the above."
+                ],
+                answer: 1,
+                explanation: "المترجمات (Compilers) تقوم بترجمة برامج اللغات عالية المستوى إلى برامج بلغة الآلة (Machine language) لتنفيذها بسرعة."
+            },
+            {
+                id: 12, chapter: 1, codeId: "1.7 Q1", section: "Section 1.7 Programming Languages",
+                question: "Today, virtually all new major operating systems are written in:",
+                options: [
+                    "a. Objective-C.",
+                    "b. C or C++.",
+                    "c. Visual C#.",
+                    "d. Ada."
+                ],
+                answer: 1,
+                explanation: "جميع أنظمة التشغيل الرئيسية الحديثة تقريباً مكتوبة بلغة C أو C++ نظراً لكفاءتها العالية وقربها من العتاد."
+            },
+            {
+                id: 13, chapter: 1, codeId: "1.7 Q2", section: "Section 1.7 Programming Languages",
+                question: "Which of the following languages is used primarily for scientific and engineering applications?",
+                options: [
+                    "a. Fortran.",
+                    "b. COBOL.",
+                    "c. Pascal.",
+                    "d. Basic."
+                ],
+                answer: 0,
+                explanation: "لغة فورتران (Fortran - FORmula TRANslator) طُورت بواسطة IBM وتُستخدم بشكل أساسي في التطبيقات العلمية والهندسية المعقدة."
+            },
+            {
+                id: 14, chapter: 1, codeId: "1.7 Q3", section: "Section 1.7 Programming Languages",
+                question: "Which language was developed by Microsoft in the early 1990s to simplify the development of Windows applications?",
+                options: [
+                    "a. Visual C#.",
+                    "b. Python.",
+                    "c. Objective-C.",
+                    "d. Visual Basic."
+                ],
+                answer: 3,
+                explanation: "لغة Visual Basic تم تطويرها من قبل مايكروسوفت في أوائل التسعينيات لتسهيل بناء تطبيقات واجهة المستخدم الرسومية لنظام ويندوز."
+            },
+            {
+                id: 15, chapter: 1, codeId: "1.8 Q1", section: "Section 1.8 Introduction to Object Technology",
+                question: "________ is a graphical language that allows people who design software systems to use an industry standard notation to represent them.",
+                options: [
+                    "a. The Unified Graphical Language",
+                    "b. The Unified Design Language",
+                    "c. The Unified Modeling Language",
+                    "d. None of the above"
+                ],
+                answer: 2,
+                explanation: "لغة النمذجة الموحدة (The Unified Modeling Language - UML) هي اللغة الرسومية القياسية لتصميم وتمثيل الأنظمة البرمجية."
+            },
+            {
+                id: 16, chapter: 1, codeId: "1.8 Q2", section: "Section 1.8 Introduction to Object Technology",
+                question: "________ models software in terms similar to those that people use to describe real-world objects.",
+                options: [
+                    "a. Object-oriented programming",
+                    "b. Object-oriented design",
+                    "c. Procedural programming",
+                    "d. None of the above"
+                ],
+                answer: 1,
+                explanation: "التصميم كائني التوجه (Object-oriented design - OOD) يقوم بنمذجة البرمجيات بمصطلحات مشابهة لتلك التي يستخدمها البشر لوصف كائنات العالم الحقيقي."
+            },
+            {
+                id: 17, chapter: 1, codeId: "1.8 Q3", section: "Section 1.8 Introduction to Object Technology",
+                question: "Which statement is false?",
+                options: [
+                    "a. Classes are reusable software components.",
+                    "b. A class is to an object as a blueprint is to a house.",
+                    "c. Performing a task in a program requires a method.",
+                    "d. A class is an instance of its object."
+                ],
+                answer: 3,
+                explanation: "العبارة (d) معكوسة وخاطئة؛ فالكائن (Object) هو نسخة (Instance) من الصنف (Class) وليس العكس."
+            },
+            {
+                id: 18, chapter: 1, codeId: "1.9 Q1", section: "Section 1.9 Typical C++ Development Environment",
+                question: "The ________ creates object code and stores it on disk.",
+                options: [
+                    "a. Interpreter.",
+                    "b. Compiler.",
+                    "c. Preprocessor.",
+                    "d. Loader."
+                ],
+                answer: 1,
+                explanation: "المترجم (Compiler) يترجم الكود المصدري إلى كود الهدف (Object code) ويقوم بتخزينه على القرص."
+            },
+            {
+                id: 19, chapter: 1, codeId: "1.9 Q2", section: "Section 1.9 Typical C++ Development Environment",
+                question: "The linker links:",
+                options: [
+                    "a. The source code with the object code.",
+                    "b. The object code with the libraries.",
+                    "c. The executable code with primary memory.",
+                    "d. The primary memory with the CPU."
+                ],
+                answer: 1,
+                explanation: "الرابط (Linker) يقوم بربط كود الهدف (Object code) مع المكتبات البرمجية (Libraries) لتكوين الملف القابل للتنفيذ."
+            },
+            {
+                id: 20, chapter: 1, codeId: "1.11 Q1", section: "Section 1.11 Operating Systems",
+                question: "Which of the following statements is false?",
+                options: [
+                    "a. The concepts of icons, menus and windows were originally developed by Xerox PARC.",
+                    "b. Windows is an open source operating system.",
+                    "c. The software that contains the core components of the operating system is called the kernel.",
+                    "d. Linux source code is available to the public for examination and modification."
+                ],
+                answer: 1,
+                explanation: "العبارة (b) خاطئة لأن نظام تشغيل Windows هو نظام احتكاري مغلق المصدر خاص بشركة مايكروسوفت وليس مفتوح المصدر."
+            },
+            {
+                id: 21, chapter: 1, codeId: "1.11 Q2", section: "Section 1.11 Operating Systems",
+                question: "Which of the following is not a key organization in the open-source community?",
+                options: [
+                    "a. Apache.",
+                    "b. SourceForge.",
+                    "c. Firefox.",
+                    "d. Eclipse."
+                ],
+                answer: 2,
+                explanation: "Firefox هو اسم متصفح ويب وليس اسم منظمة (المنظمة المطورة له هي مؤسسة Mozilla)."
+            },
+            {
+                id: 22, chapter: 1, codeId: "1.12 Q1", section: "Section 1.12 Internet and the World Wide Web",
+                question: "________ helps Internet-based applications perform like desktop applications.",
+                options: [
+                    "a. Ajax",
+                    "b. Blogging",
+                    "c. RSS",
+                    "d. Mashups"
+                ],
+                answer: 0,
+                explanation: "تقنية Ajax (Asynchronous JavaScript and XML) تساعد تطبيقات الويب على تحديث البيانات في الخلفية لتعمل بسرعة وتفاعل يشبه تطبيقات سطح المكتب."
+            },
+            {
+                id: 23, chapter: 1, codeId: "1.12 Q2", section: "Section 1.12 Internet and the World Wide Web",
+                question: "________ is a communications protocol used to send information over the web.",
+                options: [
+                    "a. HyperText Markup Language (HTML).",
+                    "b. URL (Uniform Resource Locator).",
+                    "c. Web 2.0",
+                    "d. TCP/IP"
+                ],
+                answer: 3,
+                explanation: "بروتوكول TCP/IP هو مجموعة بروتوكولات الاتصال الأساسية المستخدمة لإرسال البيانات عبر الإنترنت والويب."
+            },
+            {
+                id: 24, chapter: 1, codeId: "1.13 Q1", section: "Section 1.13 Some Key Software Development Terminology",
+                question: "________ involves reworking programs to make them clearer and easier to maintain while preserving their correctness and functionality.",
+                options: [
+                    "a. Object-oriented programming",
+                    "b. Refactoring",
+                    "c. Agile software development",
+                    "d. LAMP"
+                ],
+                answer: 1,
+                explanation: "إعادة الهيكلة (Refactoring) تعني إعادة صياغة الكود الداخلي لجعله أنظف وأسهل في الصيانة مع الحفاظ التام على وظيفته وصحته."
+            },
+            {
+                id: 25, chapter: 1, codeId: "1.13 Q2", section: "Section 1.13 Some Key Software Development Terminology",
+                question: "Which software product release category is \"generally feature complete and supposedly bug free, and ready for use by the community?\"",
+                options: [
+                    "a. Alpha.",
+                    "b. Beta.",
+                    "c. Release candidate.",
+                    "d. Continuous beta."
+                ],
+                answer: 2,
+                explanation: "النسخة المرشحة للإصدار (Release candidate) تكون مكتملة الميزات ومفحوصة من الأخطاء وجاهزة للاستخدام من قِبل المجتمع."
+            },
+            {
+                id: 26, chapter: 1, codeId: "1.14 Q1", section: "Section 1.14 C++11 and the Open Source Boost Libraries",
+                question: "Which of the following is not a goal stated by the creator of C++ for the new C++ standard?",
+                options: [
+                    "a. Make C++ easier to learn.",
+                    "b. Improve library building capabilities.",
+                    "c. Make C++ an open source programming language.",
+                    "d. Increase compatibility with the C programming language."
+                ],
+                answer: 2,
+                explanation: "جعل C++ لغة مفتوحة المصدر لم يكن من الأهداف الثلاثة المعلنة من قِبل Bjarne Stroustrup لتطوير المعيار الجديد."
+            },
+            {
+                id: 27, chapter: 1, codeId: "1.14 Q2", section: "Section 1.14 C++11 and the Open Source Boost Libraries",
+                question: "Which statement about the Boost C++ Libraries is false?",
+                options: [
+                    "a. They are free, open source libraries created by members of the C++ community.",
+                    "b. Some of the new C++11 Standard Library features were derived from corresponding Boost libraries.",
+                    "c. Two examples of the Boost libraries are the \"regular expression\" and \"smart pointer\" libraries.",
+                    "d. Smart pointers are used to match specific character patterns in text."
+                ],
+                answer: 3,
+                explanation: "العبارة (d) خاطئة لأن المؤشرات الذكية (Smart pointers) تُستخدم لإدارة الذاكرة تلقائياً وتجنب تسربها، بينما التعابير النمطية (Regular expressions) هي التي تطابق أنماط النصوص."
+            },
+            {
+                id: 28, chapter: 1, codeId: "1.14 Q3", section: "Section 1.14 C++11 and the Open Source Boost Libraries",
+                question: "[C++11]: The C++11 standard was formerly referred to as:",
+                options: [
+                    "a. Old C++",
+                    "b. C++10",
+                    "c. C++0x",
+                    "d. C++09"
+                ],
+                answer: 2,
+                explanation: "كان يُشار إلى المعيار C++11 سابقاً أثناء تطويره بالاسم المؤقت C++0x."
+            },
+            {
+                id: 29, chapter: 1, codeId: "1.14 Q4", section: "Section 1.14 C++11 and the Open Source Boost Libraries",
+                question: "[C++11]: Which of the following is true?",
+                options: [
+                    "a. Some of the new C++11 Standard Library features were derived from corresponding Boost libraries.",
+                    "b. None of the new C++11 Standard Library features were derived from corresponding Boost libraries.",
+                    "c. C++11 does not have any new Standard Library features.",
+                    "d. None of the above."
+                ],
+                answer: 0,
+                explanation: "العديد من الإضافات الجديدة في المكتبة القياسية لمعيار C++11 تم اشتقاقها وتبنيها من مكتبات Boost الشهيرة."
+            },
+
+            // CHAPTER 2 (21 Questions)
+            {
+                id: 30, chapter: 2, codeId: "2.2 Q1", section: "Section 2.2 First Program in C++: Printing a Line of Text",
+                question: "End-of-line comments that should be ignored by the compiler are denoted using:",
+                options: [
+                    "a. Two forward slashes ( // ).",
+                    "b. Three forward slashes ( /// ).",
+                    "c. A slash and a star ( /* ).",
+                    "d. A slash and two stars ( /** )."
+                ],
+                answer: 0,
+                explanation: "التعليقات ذات السطر الواحد (End-of-line comments) في لغة C++ تبدأ بشرطتين مائلتين (//)."
+            },
+            {
+                id: 31, chapter: 2, codeId: "2.2 Q2", section: "Section 2.2 First Program in C++: Printing a Line of Text",
+                question: "Which of the following does not cause a syntax error to be reported by the C++ compiler?",
+                options: [
+                    "a. Mismatched { }.",
+                    "b. Missing */ in a comment.",
+                    "c. Missing ; at the end of a statement.",
+                    "d. Extra blank lines."
+                ],
+                answer: 3,
+                explanation: "الأسطر الفارغة والمسافات البيضاء الإضافية (Extra blank lines) يتجاهلها المترجم تماماً ولا تسبب أي خطأ قواعدي."
+            },
+            {
+                id: 32, chapter: 2, codeId: "2.2 Q3", section: "Section 2.2 First Program in C++: Printing a Line of Text",
+                question: "Which of the following is not a syntax error?",
+                options: [
+                    "a. std::cout << 'Hello world!';",
+                    "b. std::cout << \"Hello\nworld!\"; (split across two lines without quotes)",
+                    "c. std::cout << \"Hello world!\";",
+                    "d. std::cout << Hello world!;"
+                ],
+                answer: 2,
+                explanation: "العبارة `std::cout << \"Hello world!\";` مكتوبة بشكل سليم باستخدام علامات التنصيص المزدوجة للسلسلة النصية والفاصلة المنقوطة."
+            },
+            {
+                id: 33, chapter: 2, codeId: "2.2 Q4", section: "Section 2.2 First Program in C++: Printing a Line of Text",
+                question: "The escape sequence for a newline is:",
+                options: [
+                    "a. \\n",
+                    "b. \\t",
+                    "c. \\r",
+                    "d. \\a"
+                ],
+                answer: 0,
+                explanation: "تسلسل الهروب `\\n` يمثل سطراً جديداً (Newline)، بينما `\\t` جدولة أفقية، و`\\r` إرجاع لمطلع السطر، و`\\a` تنبيه صوتي."
+            },
+            {
+                id: 34, chapter: 2, codeId: "2.2 Q5", section: "Section 2.2 First Program in C++: Printing a Line of Text",
+                question: "Which of the following statements would display the phrase C++ is fun?",
+                options: [
+                    "a. std::cout << \"Thisis fun\\rC++ \";",
+                    "b. std::cout << '++ is fun';",
+                    "c. std::cout << C++ is fun;",
+                    "d. std::cout << \"\\\"C++ is fun\\\"\";"
+                ],
+                answer: 0,
+                explanation: "الرمز `\\r` (Carriage Return) يعيد المؤشر إلى بداية السطر، فتقوم `C++ ` بالكتابة فوق أول 4 أحرف (`This`) لتظهر النتيجة النهائية `C++ is fun` بدون علامات تنصيص."
+            },
+            {
+                id: 35, chapter: 2, codeId: "2.3 Q1", section: "Section 2.3 Modifying Our First C++ Program",
+                question: "Which of the following is not a valid C++ identifier?",
+                options: [
+                    "a. my Value",
+                    "b. _AAA1",
+                    "c. width",
+                    "d. m_x"
+                ],
+                answer: 0,
+                explanation: "المعرف (Identifier) في C++ لا يجوز أن يحتوي على مسافة فارغة كما في `my Value`."
+            },
+            {
+                id: 36, chapter: 2, codeId: "2.3 Q2", section: "Section 2.3 Modifying Our First C++ Program",
+                question: "Which is the output of the following statements?",
+                code: "std::cout << \"Hello \";\nstd::cout << \"World\";",
+                options: [
+                    "a. Hello World",
+                    "b. World Hello",
+                    "c. Hello\nWorld",
+                    "d. World\nHello"
+                ],
+                answer: 0,
+                explanation: "بما أن الجملة الأولى تنتهي بمسافة ولا تحتوي على `\\n` أو `endl`، فستُطبع الكلمة الثانية مباشرة بجانبها على نفس السطر: `Hello World`."
+            },
+            {
+                id: 37, chapter: 2, codeId: "2.3 Q3", section: "Section 2.3 Modifying Our First C++ Program",
+                question: "Which of the following is the escape character?",
+                options: [
+                    "a. *",
+                    "b. \\",
+                    "c. \\n",
+                    "d. \""
+                ],
+                answer: 1,
+                explanation: "محرف الهروب (Escape character) المفرد هو الشرطة المائلة العكسية `\\` (Backslash)، بينما `\\n` كاملة تسمى تسلسل هروب (Escape sequence)."
+            },
+            {
+                id: 38, chapter: 2, codeId: "2.3 Q4", section: "Section 2.3 Modifying Our First C++ Program",
+                question: "Which of the following code segments prints a single line containing hello there with the words separated by a single space?",
+                options: [
+                    "a. std::cout << \"hello \";\n   std::cout << \" there\";",
+                    "b. std::cout << \"hello\" , \" there\";",
+                    "c. std::cout << \"hello\";\n   std::cout << \"there\";",
+                    "d. std::cout << \"hello\";\n   std::cout << \" there\";"
+                ],
+                answer: 3,
+                explanation: "في الخيار (d) تطبع الجملة الأولى `hello` بدون مسافة، وتطبع الثانية ` there` مسبوقة بمسافة واحدة فقط، فينتج `hello there`."
+            },
+            {
+                id: 39, chapter: 2, codeId: "2.4 Q1", section: "Section 2.4 Another C++ Program: Adding Integers",
+                question: "Which of the following is a variable declaration statement?",
+                options: [
+                    "a. int total;",
+                    "b. #include <iostream>",
+                    "c. int main()",
+                    "d. // first string entered by user"
+                ],
+                answer: 0,
+                explanation: "العبارة `int total;` هي جملة تصريح عن متغير (Variable declaration) من نوع عدد صحيح `int`."
+            },
+            {
+                id: 40, chapter: 2, codeId: "2.4 Q2", section: "Section 2.4 Another C++ Program: Adding Integers",
+                question: "The ________ object enables a program to read data from the user.",
+                options: [
+                    "a. std::cout.",
+                    "b. std::cin.",
+                    "c. std::cread.",
+                    "d. std::cget."
+                ],
+                answer: 1,
+                explanation: "الكائن `std::cin` (مجرى الإدخال القياسي) يُستخدم لقراءة البيانات المدخلة من المستخدم عبر لوحة المفاتيح."
+            },
+            {
+                id: 41, chapter: 2, codeId: "2.4 Q3", section: "Section 2.4 Another C++ Program: Adding Integers",
+                question: "The assignment operator ________ assigns the value of the expression on its right to the variable on its left.",
+                options: [
+                    "a. <-",
+                    "b. ->",
+                    "c. =",
+                    "d. #"
+                ],
+                answer: 2,
+                explanation: "معامل الإسناد في لغة C++ هو علامة المساواة المفردة `=`."
+            },
+            {
+                id: 42, chapter: 2, codeId: "2.4 Q4", section: "Section 2.4 Another C++ Program: Adding Integers",
+                question: "The std::endl stream manipulator ________.",
+                options: [
+                    "a. inputs a newline.",
+                    "b. flushes the output buffer.",
+                    "c. outputs a newline and flushes the output buffer.",
+                    "d. terminates the program."
+                ],
+                answer: 2,
+                explanation: "يقوم `std::endl` بوظيفتين: طباعة سطر جديد (outputs a newline) وتفريغ مخزن الإخراج المؤقت فوراً (flushes the output buffer)."
+            },
+            {
+                id: 43, chapter: 2, codeId: "2.5 Q1", section: "Section 2.5 Memory Concepts",
+                question: "Which of the following statements does not overwrite a preexisting value stored in a memory location?",
+                options: [
+                    "a. int a;",
+                    "b. number = 12;",
+                    "c. y = y + 2;",
+                    "d. width = length;"
+                ],
+                answer: 0,
+                explanation: "جملة التصريح `int a;` تحجز اسماً للموقع في الذاكرة فقط دون كتابة قيمة جديدة فوق ما كان مخزناً فيه، بينما جمل الإسناد الأخرى تستبدل القيمة القديمة."
+            },
+            {
+                id: 44, chapter: 2, codeId: "2.5 Q2", section: "Section 2.5 Memory Concepts",
+                question: "Which of the following statements could potentially change the value of number2?",
+                options: [
+                    "a. std::cin >> number2;",
+                    "b. sum = number1 + number2;",
+                    "c. number1 = number2;",
+                    "d. std::cout << number2;"
+                ],
+                answer: 0,
+                explanation: "جملة الإدخال `std::cin >> number2;` تقرأ قيمة من المستخدم وتخزنها في `number2` مما يغير قيمته السابقة."
+            },
+            {
+                id: 45, chapter: 2, codeId: "2.6 Q1", section: "Section 2.6 Arithmetic",
+                question: "What is the value of result after the following C++ statements execute?",
+                code: "int a, b, c, d, result;\na = 4;\nb = 12;\nc = 37;\nd = 51;\nresult = d % a * c + a % b + a;",
+                options: [
+                    "a. 119",
+                    "b. 51",
+                    "c. 127",
+                    "d. 59"
+                ],
+                answer: 0,
+                explanation: "حسب أولوية العمليات: `d % a` هي `51 % 4 = 3`، ثم `3 * 37 = 111`، ثم `a % b` هي `4 % 12 = 4`، وبجمع القيم: `111 + 4 + 4 = 119`."
+            },
+            {
+                id: 46, chapter: 2, codeId: "2.6 Q2", section: "Section 2.6 Arithmetic",
+                question: "In what order would the following operators be evaluated: -, *, /, +, % ? Assume that if two operations have the same precedence, the one listed first will be evaluated first.",
+                options: [
+                    "a. +, -, /, *, %",
+                    "b. -, +, %, *, /",
+                    "c. -, *, %, +, /",
+                    "d. *, /, %, -, +"
+                ],
+                answer: 3,
+                explanation: "معاملات الضرب والقسمة وباقي القسمة `*, /, %` لها نفس الأولوية العليا وتُقيّم من اليسار لليمين، تليها معاملات الطرح والجمع `-, +` من اليسار لليمين."
+            },
+            {
+                id: 47, chapter: 2, codeId: "2.6 Q3", section: "Section 2.6 Arithmetic",
+                question: "Which of the following is not an arithmetic operator?",
+                options: [
+                    "a. +",
+                    "b. -",
+                    "c. =",
+                    "d. %"
+                ],
+                answer: 2,
+                explanation: "العلامة `=` هي معامل إسناد (Assignment operator) وليست من المعاملات الحسابية."
+            },
+            {
+                id: 48, chapter: 2, codeId: "2.7 Q1", section: "Section 2.7 Decision Making: Equality and Relational Operators",
+                question: "What will be the output after the following C++ statements have been executed?",
+                code: "int a, b, c, d;\na = 4;\nb = 12;\nc = 37;\nd = 51;\nif ( a < b )\n   cout << \"a < b\" << endl;\nif ( a > b )\n   cout << \"a > b\" << endl;\nif ( d <= c )\n   cout << \"d <= c\" << endl;\nif ( c != d )\n   cout << \"c != d\" << endl;",
+                options: [
+                    "a. a < b\n   c != d",
+                    "b. a < b\n   d <= c\n   c != d",
+                    "c. a > b\n   c != d",
+                    "d. a < b\n   c < d\n   a != b"
+                ],
+                answer: 0,
+                explanation: "الشرط الأول `4 < 12` صحيح فيطبع `a < b`، والشرط الأخير `37 != 51` صحيح فيطبع `c != d`، بينما الشرطان الثاني والثالث غير متحققين."
+            },
+            {
+                id: 49, chapter: 2, codeId: "2.7 Q2", section: "Section 2.7 Decision Making: Equality and Relational Operators",
+                question: "Which of the following is a compilation error?",
+                options: [
+                    "a. Neglecting to declare a local variable in a function before it is used.",
+                    "b. Using a triple equals sign instead of a double equals sign in the condition of an if statement.",
+                    "c. Omitting the left and right parentheses for the condition of an if statement.",
+                    "d. All of the above."
+                ],
+                answer: 3,
+                explanation: "جميع الحالات المذكورة تُعد أخطاء قواعدية (Syntax/Compilation errors) يكتشفها المترجم ويمنع بناء البرنامج."
+            },
+            {
+                id: 50, chapter: 2, codeId: "2.7 Q3", section: "Section 2.7 Decision Making: Equality and Relational Operators",
+                question: "Each of the following is a relational or equality operator except:",
+                options: [
+                    "a. <=",
+                    "b. =!",
+                    "c. ==",
+                    "d. >"
+                ],
+                answer: 1,
+                explanation: "الرمز `=!` غير صحيح كمعامل مقارنة، لأن معامل عدم المساواة في C++ يُكتب `!=`."
+            },
+
+            // CHAPTER 4 (23 Questions)
+            {
+                id: 51, chapter: 4, codeId: "4.2 Q1", section: "Section 4.2 Algorithms",
+                question: "Specifying the order in which statements are to be executed in a computer program is called:",
+                options: [
+                    "a. An algorithm.",
+                    "b. Transfer of control.",
+                    "c. Program control.",
+                    "d. Pseudocode."
+                ],
+                answer: 2,
+                explanation: "تحديد الترتيب الذي تُنفذ به الجمل البرمجية في البرنامج يُسمى التحكم في البرنامج (Program control)."
+            },
+            {
+                id: 52, chapter: 4, codeId: "4.3 Q1", section: "Section 4.3 Pseudocode",
+                question: "Which of the following is true of pseudocode?",
+                options: [
+                    "a. It is executed by the computer.",
+                    "b. It helps the programmer \"think out\" a program.",
+                    "c. It includes declarations and all types of statements.",
+                    "d. All of the above are false."
+                ],
+                answer: 1,
+                explanation: "الكود الزائف (Pseudocode) هو لغة وصفية غير رسمية تساعد المبرمج على التفكير وتصميم منطق البرنامج قبل كتابته بلغة البرمجة."
+            },
+            {
+                id: 53, chapter: 4, codeId: "4.3 Q2", section: "Section 4.3 Pseudocode",
+                question: "Pseudocode normally does not include:",
+                options: [
+                    "a. Declarations.",
+                    "b. Input/output.",
+                    "c. Algorithms.",
+                    "d. Control structures."
+                ],
+                answer: 0,
+                explanation: "الكود الزائف (Pseudocode) لا يتضمن عادةً جمل التصريح عن المتغيرات (Declarations) ويركز على خطوات التنفيذ."
+            },
+            {
+                id: 54, chapter: 4, codeId: "4.4 Q1", section: "Section 4.4 Control Structures",
+                question: "Which of the following encompasses the other three?",
+                options: [
+                    "a. Sequence structure.",
+                    "b. Repetition structure.",
+                    "c. Control structure.",
+                    "d. Selection structure."
+                ],
+                answer: 2,
+                explanation: "مصطلح هيكل التحكم (Control structure) هو المظلة التي تشمل الأنواع الثلاثة: التسلسل، والاختيار، والتكرار."
+            },
+            {
+                id: 55, chapter: 4, codeId: "4.4 Q2", section: "Section 4.4 Control Structures",
+                question: "In an activity diagram for an algorithm, what does a solid circle surrounded by a hollow circle represent?",
+                options: [
+                    "a. Initial state.",
+                    "b. Final state.",
+                    "c. Action state.",
+                    "d. Transition."
+                ],
+                answer: 1,
+                explanation: "الدائرة السوداء المصمتة المحاطة بدائرة مفرغة في مخطط النشاط (UML Activity Diagram) تمثل حالة النهاية (Final state)."
+            },
+            {
+                id: 56, chapter: 4, codeId: "4.4 Q3", section: "Section 4.4 Control Structures",
+                question: "Which of the following is a double-selection statement?",
+                options: [
+                    "a. if.",
+                    "b. if...else.",
+                    "c. do...while.",
+                    "d. switch."
+                ],
+                answer: 1,
+                explanation: "جملة `if...else` هي جملة اختيار مزدوج (Double-selection) لأنها تختار بين مسارين مختلفين."
+            },
+            {
+                id: 57, chapter: 4, codeId: "4.4 Q4", section: "Section 4.4 Control Structures",
+                question: "Which of the following is a repetition structure?",
+                options: [
+                    "a. if.",
+                    "b. if...else.",
+                    "c. do...while.",
+                    "d. switch."
+                ],
+                answer: 2,
+                explanation: "جملة `do...while` هي إحدى هياكل التكرار الثلاثة في C++ إلى جانب `while` و `for`."
+            },
+            {
+                id: 58, chapter: 4, codeId: "4.4 Q5", section: "Section 4.4 Control Structures",
+                question: "[C++11] Which of the following is not a keyword that was added to C++ in the new C++11 standard?",
+                options: [
+                    "a. nullptr.",
+                    "b. operator.",
+                    "c. constexpr.",
+                    "d. noexcept."
+                ],
+                answer: 1,
+                explanation: "الكلمة المفتاحية `operator` موجودة في C++ منذ نشأتها لتحميل المعاملات، بينما البقية أضيفت في معيار C++11."
+            },
+            {
+                id: 59, chapter: 4, codeId: "4.5 Q1", section: "Section 4.5 if Selection Statement",
+                question: "If grade has the value of 60, what will the following code display?",
+                code: "if ( grade >= 60 )\n   cout << \"Passed\";",
+                options: [
+                    "a. nothing.",
+                    "b. 60",
+                    "c. Passed",
+                    "d. cout << \"Passed\";"
+                ],
+                answer: 2,
+                explanation: "بما أن `grade` يساوي 60، فإن الشرط `60 >= 60` صحيح، وبالتالي يتم طباعة النص `Passed`."
+            },
+            {
+                id: 60, chapter: 4, codeId: "4.5 Q2", section: "Section 4.5 if Selection Statement",
+                question: "The data type bool:",
+                options: [
+                    "a. Can take on values true and false.",
+                    "b. Can take on any expression as a value.",
+                    "c. Can take on values -1, 0 or 1.",
+                    "d. Can only be used in a selection statement."
+                ],
+                answer: 0,
+                explanation: "نوع البيانات المنطقي `bool` يخزن إحدى القيمتين المنطقيتين `true` أو `false`."
+            },
+            {
+                id: 61, chapter: 4, codeId: "4.6 Q1", section: "Section 4.6 if...else Double-Selection Statement",
+                question: "The conditional operator (?:):",
+                options: [
+                    "a. Is the only ternary operator in C++.",
+                    "b. Is a unary operator.",
+                    "c. Associates from left to right.",
+                    "d. Accepts two operands."
+                ],
+                answer: 0,
+                explanation: "المعامل الشرطي `(?:)` هو المعامل الثلاثي (Ternary operator) الوحيد في لغة C++ لأنه يأخذ ثلاثة معاملات."
+            },
+            {
+                id: 62, chapter: 4, codeId: "4.6 Q2", section: "Section 4.6 if...else Double-Selection Statement",
+                question: "Which of the following does not display correct if answer is equal to 7 and incorrect if answer is not equal to 7?",
+                options: [
+                    "a. if ( answer == 7 )\n      cout << \"correct\";\n   else\n      cout << \"incorrect\";",
+                    "b. cout << answer == 7 ? \"correct\" : \"incorrect\";",
+                    "c. cout << ( answer == 7 ? \"correct\" : \"incorrect\" );",
+                    "d. answer == 7 ? cout << \"correct\" : cout << \"incorrect\";"
+                ],
+                answer: 1,
+                explanation: "في الخيار (b)، عدم وجود أقواس حول التعبير الشرطي يجعل معامل الإزاحة `<<` يُنفذ قبل `==` نظراً لعلو أولويته، مما يسبب خطأ."
+            },
+            {
+                id: 63, chapter: 4, codeId: "4.6 Q3", section: "Section 4.6 if...else Double-Selection Statement",
+                question: "A block:",
+                options: [
+                    "a. Cannot contain declarations.",
+                    "b. Must contain exactly three statements.",
+                    "c. Is a compound statement.",
+                    "d. Is represented by placing a semicolon (;) where a statement would normally be."
+                ],
+                answer: 2,
+                explanation: "الكتلة البرمجية (Block) المحاطة بأقواس متعرجة `{ }` تُسمى أيضاً الجملة المركبة (Compound statement)."
+            },
+            {
+                id: 64, chapter: 4, codeId: "4.7 Q1", section: "Section 4.7 while Repetition Statement",
+                question: "What is wrong with the following while loop?",
+                code: "while ( sum <= 1000 )\n   sum = sum - 30;",
+                options: [
+                    "a. The parentheses should be braces.",
+                    "b. Braces are required around sum = sum - 30;.",
+                    "c. There should be a semicolon after while ( sum <= 1000 ).",
+                    "d. sum = sum - 30 should be sum = sum + 30 or else the loop may never end."
+                ],
+                answer: 3,
+                explanation: "طرح 30 من `sum` في كل دورة سيجعل قيمته تقل باستمرار وتبقى أصغر من 1000، مما يوقع البرنامج في حلقة لا نهائية (Infinite loop)."
+            },
+            {
+                id: 65, chapter: 4, codeId: "4.7 Q2", section: "Section 4.7 while Repetition Statement",
+                question: "How many times will the following loop print hello?",
+                code: "i = 1;\nwhile ( i <= 10 )\n   cout << \"hello\";",
+                options: [
+                    "a. 0.",
+                    "b. 9.",
+                    "c. 10.",
+                    "d. An infinite number of times."
+                ],
+                answer: 3,
+                explanation: "بما أنه لا يتم زيادة قيمة `i` داخل جسم حلقة `while`، فستظل قيمة `i` تساوي 1 دائماً ويُطبع `hello` عدداً لا نهائياً من المرات."
+            },
+            {
+                id: 66, chapter: 4, codeId: "4.8 Q1", section: "Section 4.8 Formulating Algorithms: Counter-Controlled Repetition",
+                question: "An uninitialized local variable contains:",
+                options: [
+                    "a. The value last stored in the memory location reserved for that variable.",
+                    "b. No value.",
+                    "c. A value of zero.",
+                    "d. A randomly assigned value."
+                ],
+                answer: 0,
+                explanation: "المتغير المحلي غير المهيأ يحتوي على القيمة المتبقية (Garbage value) التي كانت مخزنة مسبقاً في نفس موقع الذاكرة."
+            },
+            {
+                id: 67, chapter: 4, codeId: "4.8 Q2", section: "Section 4.8 Formulating Algorithms: Counter-Controlled Repetition",
+                question: "Using a while loop's counter-control variable in a calculation after the loop ends often causes a common logic error called:",
+                options: [
+                    "a. A fatal logic error.",
+                    "b. A counter exception.",
+                    "c. A syntax error.",
+                    "d. An off-by-one error."
+                ],
+                answer: 3,
+                explanation: "استخدام متغير العداد في عملية حسابية بعد انتهاء الحلقة يسبب غالباً خطأ منطقياً بمقدار واحد (Off-by-one error) لأن العداد يزيد بواحد إضافي لكسر شرط الحلقة."
+            },
+            {
+                id: 68, chapter: 4, codeId: "4.9 Q1", section: "Section 4.9 Formulating Algorithms: Sentinel-Controlled Repetition",
+                question: "What is the final value of x after performing the following operations?",
+                code: "int x = 21;\ndouble y = 6;\ndouble z = 14;\ny = x / z;\nx = 5.5 * y;",
+                options: [
+                    "a. 8.25.",
+                    "b. 5.5.",
+                    "c. 5.",
+                    "d. 8."
+                ],
+                answer: 3,
+                explanation: "حساب `y = 21 / 14.0` يعطي `1.5`، ثم `5.5 * 1.5 = 8.25`، وعند تخزينها في المتغير الصحيح `int x` يتم حذف الجزء الكسري فتصبح `8`."
+            },
+            {
+                id: 69, chapter: 4, codeId: "4.9 Q2", section: "Section 4.9 Formulating Algorithms: Sentinel-Controlled Repetition",
+                question: "Which operation does not take place in the following example?",
+                code: "int x = 21;\ndouble y = 6;\ndouble z = 14;\ny = x / z;\nx = 5.5 * y;",
+                options: [
+                    "a. Implicit conversion.",
+                    "b. Promotion.",
+                    "c. Explicit conversion.",
+                    "d. Truncation."
+                ],
+                answer: 2,
+                explanation: "الكود يتضمن تحويلاً ضمنياً وترقية واقتطاعاً للكسر، ولكنه لا يحتوي على أي تحويل صريح (Explicit conversion مثل `static_cast`)."
+            },
+            {
+                id: 70, chapter: 4, codeId: "4.10 Q1", section: "Section 4.10 Formulating Algorithms: Nested Control Statements",
+                question: "Having a loop within a loop is known as:",
+                options: [
+                    "a. Recursion.",
+                    "b. Doubling up.",
+                    "c. Nesting.",
+                    "d. Stacking."
+                ],
+                answer: 2,
+                explanation: "وضع حلقة تكرار داخل حلقة تكرار أخرى يُعرف بالتداخل (Nesting)."
+            },
+            {
+                id: 71, chapter: 4, codeId: "4.10 Q2", section: "Section 4.10 Formulating Algorithms: Nested Control Statements",
+                question: "[C++11]: Which of the following statements initializes the unsigned int variable counter to 10?",
+                options: [
+                    "a. unsigned int counter = 10;",
+                    "b. unsigned int counter = { 10 };",
+                    "c. unsigned int counter{ 10 };",
+                    "d. All of the above."
+                ],
+                answer: 3,
+                explanation: "جميع الطرق الثلاث صحيحة في معيار C++11 لتهيئة المتغير بقيمة ابتدائية 10."
+            },
+            {
+                id: 72, chapter: 4, codeId: "4.10 Q3", section: "Section 4.10 Formulating Algorithms: Nested Control Statements",
+                question: "[C++11]: Which of the following is true?",
+                options: [
+                    "a. Assigning a double value to an int does not lose any data.",
+                    "b. For fundamental-type variables, list-initialization syntax prevents narrowing conversions that could result in data loss.",
+                    "c. For fundamental-type variables, list-initialization syntax allows narrowing conversions that could result in data loss.",
+                    "d. None of the above."
+                ],
+                answer: 1,
+                explanation: "تهيئة القائمة باستخدام الأقواس المتعرجة `{ }` في C++11 تمنع تحويلات التضييق (Narrowing conversions) التي قد تؤدي إلى فقدان البيانات."
+            },
+            {
+                id: 73, chapter: 4, codeId: "4.11 Q1", section: "Section 4.11 Assignment Operators",
+                question: "If x initially contains the value 3, which of the following sets x to 7?",
+                options: [
+                    "a. x ++ 4;",
+                    "b. x += 4;",
+                    "c. x =+ 4;",
+                    "d. x + 4 = x;"
+                ],
+                answer: 1,
+                explanation: "المعامل المركب `x += 4;` يجمع 4 على قيمة `x` الحالية (3) ويخزن الناتج (7) في `x`."
+            },
+            {
+                id: 74, chapter: 4, codeId: "4.11 Q2", section: "Section 4.11 Assignment Operators",
+                question: "Assuming that x and y are equal to 3 and 2, respectively, after the statement x -= y; executes, the values of x and y will be:",
+                options: [
+                    "a. x: 5; y: 3",
+                    "b. x: 3; y: -1",
+                    "c. x: 3; y: 5",
+                    "d. x: 1; y: 2"
+                ],
+                answer: 3,
+                explanation: "العبارة `x -= y;` تكافئ `x = x - y;`، فتصبح `x = 3 - 2 = 1`، بينما تبقى قيمة `y` مساوية لـ 2."
+            },
+            {
+                id: 75, chapter: 4, codeId: "4.12 Q1", section: "Section 4.12 Increment and Decrement Operators",
+                question: "Which of the following will not increment c by 1?",
+                options: [
+                    "a. c + 1;",
+                    "b. c++;",
+                    "c. ++c;",
+                    "d. c += 1;"
+                ],
+                answer: 0,
+                explanation: "العبارة `c + 1;` تحسب ناتج الجمع لكنها لا تسنده إلى المتغير `c`، وبالتالي لا تتغير قيمة `c`."
+            },
+            {
+                id: 76, chapter: 4, codeId: "4.12 Q2", section: "Section 4.12 Increment and Decrement Operators",
+                question: "Assuming that x is equal to 4, which of the following statements will not result in y containing the value 5 after execution?",
+                options: [
+                    "a. y = 5;",
+                    "b. y = x++;",
+                    "c. y = ++x;",
+                    "d. y = x + 1;"
+                ],
+                answer: 1,
+                explanation: "في `y = x++;` (زيادة بعدية)، تُسند قيمة `x` الأصلية (4) إلى `y` أولاً، ثم تزداد `x` إلى 5، لذا تخرج `y` بقيمة 4 وليس 5."
+            },
+            {
+                id: 77, chapter: 4, codeId: "4.12 Q3", section: "Section 4.12 Increment and Decrement Operators",
+                question: "Which of the following operations has the highest precedence?",
+                options: [
+                    "a. Postincrement.",
+                    "b. Multiplication.",
+                    "c. Addition.",
+                    "d. Assignment."
+                ],
+                answer: 0,
+                explanation: "معامل الزيادة البعدية (Postincrement `x++`) له أعلى أولوية تنفيذ بين جميع المعاملات المذكورة في الخيارات."
+            },
+
+            // CHAPTER 5 (23 Questions - Total 94 across document, note IDs 1..94)
+            {
+                id: 78, chapter: 5, codeId: "5.2 Q1", section: "Section 5.2 Essentials of Counter-Controlled Repetition",
+                question: "Which of the following does counter-controlled repetition require?",
+                options: [
+                    "a. An initial value.",
+                    "b. A condition that tests for the final value.",
+                    "c. An increment or decrement by which the control variable is modified each time through the loop.",
+                    "d. All of the above."
+                ],
+                answer: 3,
+                explanation: "التكرار المحكوم بعداد يتطلب العناصر الثلاثة جميعها: قيمة ابتدائية للعداد، وشرط توقف، ومقدار زيادة أو نقصان."
+            },
+            {
+                id: 79, chapter: 5, codeId: "5.2 Q2", section: "Section 5.2 Essentials of Counter-Controlled Repetition",
+                question: "Which of the following is a poor programming practice?",
+                options: [
+                    "a. Indenting the statements in the body of each control structure.",
+                    "b. Using floating-point values for counters in counter-controlled repetition.",
+                    "c. Nesting multiple repetition structures.",
+                    "d. Placing vertical spacing above and below control structures."
+                ],
+                answer: 1,
+                explanation: "استخدام الأعداد العشرية (Floating-point) كعدادات للحلقات يُعد ممارسة برمجية سيئة بسبب عدم دقتها التامة في التمثيل الثنائي."
+            },
+            {
+                id: 80, chapter: 5, codeId: "5.3 Q1", section: "Section 5.3 for Repetition Statement",
+                question: "If a variable is declared in the initialization expression of a for statement, then:",
+                options: [
+                    "a. It is automatically reinitialized to zero once the loop is finished.",
+                    "b. The scope of the variable is restricted to that for loop.",
+                    "c. It retains its final value after the loop is finished.",
+                    "d. It can not be used in any structures that are nested in that for structure."
+                ],
+                answer: 1,
+                explanation: "المتغير المعرف داخل ترويسة حلقة `for` ينحصر مجاله (Scope) داخل تلك الحلقة فقط وينتهي بانتهائها."
+            },
+            {
+                id: 81, chapter: 5, codeId: "5.3 Q2", section: "Section 5.3 for Repetition Statement",
+                question: "Which of the following is false?",
+                options: [
+                    "a. The three expressions in the for structure are optional.",
+                    "b. The initialization and increment expressions can be comma-separated lists.",
+                    "c. You must declare the control variable outside of the for loop.",
+                    "d. A for loop can always be used to replace a while loop, and vice versa."
+                ],
+                answer: 2,
+                explanation: "العبارة (c) خاطئة لأنه يمكنك التصريح عن متغير التحكم مباشرة داخل ترويسة حلقة `for` ولا يشترط تعريفه خارجها."
+            },
+            {
+                id: 82, chapter: 5, codeId: "5.3 Q3", section: "Section 5.3 for Repetition Statement",
+                question: "Consider the execution of the following for loop. If the last value printed is 5, which of the following might have been used for increment?",
+                code: "for (int x = 1; x < 5; increment)\n   cout << x + 1 << endl;",
+                options: [
+                    "a. x++",
+                    "b. x += 1",
+                    "c. ++x",
+                    "d. Any of the above."
+                ],
+                answer: 3,
+                explanation: "في قسم الزيادة بحلقة `for`، يتم تنفيذ الزيادة بشكل مستقل في نهاية كل دورة، لذا `x++` و `x += 1` و `++x` كلها تعطي نفس الأثر تماماً."
+            },
+            {
+                id: 83, chapter: 5, codeId: "5.4 Q1", section: "Section 5.4 Examples Using the for Statement",
+                question: "Which of the following for headers is not valid?",
+                options: [
+                    "a. for ( int i = 0; i < 10; i++ )",
+                    "b. int i = 0;\n   for ( ; i < 10; i++ )",
+                    "c. for ( int i = 0; int j = 5; ; i++ )",
+                    "d. All of the above."
+                ],
+                answer: 2,
+                explanation: "الخيار (c) غير صالح لأنه يحتوي على 3 فواصل منقوطة (4 أجزاء) داخل ترويسة `for`، بينما المسموح هو فاصلتان منقوطتان فقط."
+            },
+            {
+                id: 84, chapter: 5, codeId: "5.4 Q2", section: "Section 5.4 Examples Using the for Statement",
+                question: "float and double variables should be used:",
+                options: [
+                    "a. To perform monetary calculations.",
+                    "b. As counters.",
+                    "c. To store true/false values.",
+                    "d. As approximate representations of decimal numbers."
+                ],
+                answer: 3,
+                explanation: "الأنواع `float` و `double` تُستخدم كتمثيل تقريبي للأعداد العشرية، ولا ينبغي استخدامها للحسابات المالية الدقيقة."
+            },
+            {
+                id: 85, chapter: 5, codeId: "5.4 Q3", section: "Section 5.4 Examples Using the for Statement",
+                question: "Which of the following is a parameterized stream manipulator used to format output?",
+                options: [
+                    "a. setw",
+                    "b. right",
+                    "c. left",
+                    "d. fixed"
+                ],
+                answer: 0,
+                explanation: "المعالج `setw` هو معالج يأخذ وسيطاً (Parameterized manipulator) لتحديد عرض الحقل مثل `setw(8)`."
+            },
+            {
+                id: 86, chapter: 5, codeId: "5.5 Q1", section: "Section 5.5 do...while Repetition Statement",
+                question: "If a do...while structure is used:",
+                options: [
+                    "a. An infinite loop cannot take place.",
+                    "b. Counter-controlled repetition is not possible.",
+                    "c. The body of the loop will execute at least once.",
+                    "d. An off-by-one error cannot occur."
+                ],
+                answer: 2,
+                explanation: "تتميز حلقة `do...while` بأن جسم الحلقة يُنفذ أولاً قبل فحص الشرط، مما يضمن تنفيذه مرة واحدة على الأقل."
+            },
+            {
+                id: 87, chapter: 5, codeId: "5.5 Q2", section: "Section 5.5 do...while Repetition Statement",
+                question: "What will the following program segment do?",
+                code: "int counter = 1;\ndo {\n   cout << counter << \" \";\n} while ( ++counter <= 10 );",
+                options: [
+                    "a. Print the numbers 1 through 11.",
+                    "b. Print the numbers 1 through 10.",
+                    "c. Print the numbers 1 through 9.",
+                    "d. Cause a syntax error."
+                ],
+                answer: 1,
+                explanation: "يطبع 1 أولاً، ثم يزيد العداد بـ `++counter` ليصبح 2 ويقارنه بـ 10، ويستمر هكذا حتى يطبع 10 ثم يصبح 11 فيتوقف، فيطبع من 1 إلى 10."
+            },
+            {
+                id: 88, chapter: 5, codeId: "5.6 Q1", section: "Section 5.6 switch Multiple-Selection Statement",
+                question: "A switch statement should be used:",
+                options: [
+                    "a. As a single-selection structure.",
+                    "b. As a double-selection structure.",
+                    "c. As a multiple-selection structure.",
+                    "d. To replace all if...else statements."
+                ],
+                answer: 2,
+                explanation: "تُستخدم جملة `switch` كهيكل اختيار متعدد (Multiple-selection structure) لاختبار قيمة متغير مقابل عدة حالات."
+            },
+            {
+                id: 89, chapter: 5, codeId: "5.6 Q2", section: "Section 5.6 switch Multiple-Selection Statement",
+                question: "In a switch statement:",
+                options: [
+                    "a. A break is required after each case.",
+                    "b. Multiple actions in a case do not need to be enclosed in braces.",
+                    "c. A default case is required.",
+                    "d. A break is required after the default case."
+                ],
+                answer: 1,
+                explanation: "في جملة `switch`، لا تحتاج الجمل المتعددة داخل الـ `case` الواحدة إلى أقواس متعرجة `{ }`."
+            },
+            {
+                id: 90, chapter: 5, codeId: "5.6 Q3", section: "Section 5.6 switch Multiple-Selection Statement",
+                question: "Which of the following is correct when labeling cases in a switch structure?",
+                options: [
+                    "a. case1",
+                    "b. Case1",
+                    "c. case 1",
+                    "d. Case 1"
+                ],
+                answer: 2,
+                explanation: "الكلمة المفتاحية `case` تُكتب بأحرف صغيرة فقط وتفصلها مسافة عن القيمة الثابتة: `case 1`."
+            },
+            {
+                id: 91, chapter: 5, codeId: "5.6 Q4", section: "Section 5.6 switch Multiple-Selection Statement",
+                question: "switch can be used to test:",
+                options: [
+                    "a. int constants.",
+                    "b. float constants.",
+                    "c. string constants.",
+                    "d. all types of constants."
+                ],
+                answer: 0,
+                explanation: "جملة `switch` في C++ تقبل فقط القيم الصحيحة الثابتة (Integral constants مثل `int` و `char`) ولا تقبل `float` أو `string`."
+            },
+            {
+                id: 92, chapter: 5, codeId: "5.6 Q5", section: "Section 5.6 switch Multiple-Selection Statement",
+                question: "Which of the following data types can be used to represent integers?",
+                options: [
+                    "a. char",
+                    "b. long",
+                    "c. short",
+                    "d. All of the above."
+                ],
+                answer: 3,
+                explanation: "جميع الأنواع `char` و `long` و `short` تُعامل في C++ كأنواع أعداد صحيحة (Integral types)."
+            },
+            {
+                id: 93, chapter: 5, codeId: "5.6 Q6", section: "Section 5.6 switch Multiple-Selection Statement",
+                question: "[C++11]: Which of the following is true?",
+                options: [
+                    "a. You can initialize data members of a class only in the class's constructor.",
+                    "b. C++11 allows you to provide a default value for a data member when you declare it in the class declaration.",
+                    "c. You cannot initialize data members of a class.",
+                    "d. None of the above."
+                ],
+                answer: 1,
+                explanation: "أضاف معيار C++11 ميزة تهيئة أعضاء البيانات مباشرة داخل تعريف الصنف (In-class member initialization)."
+            },
+            {
+                id: 94, chapter: 5, codeId: "5.7 Q1", section: "Section 5.7 break and continue Statements",
+                question: "Which of the following is false?",
+                options: [
+                    "a. break and continue statements alter the flow of control.",
+                    "b. continue statements skip the remaining statements in current iteration of the body of the loop in which they are embedded.",
+                    "c. break statements exit from the loop in which they are embedded.",
+                    "d. continue and break statements may be embedded only within repetition statements."
+                ],
+                answer: 3,
+                explanation: "العبارة (d) خاطئة لأن جملة `break` يمكن استخدامها داخل جملة الاختيار `switch` أيضاً وليس فقط داخل حلقات التكرار."
+            },
+            {
+                id: 95, chapter: 5, codeId: "5.7 Q2", section: "Section 5.7 break and continue Statements",
+                question: "Which of the following is false?",
+                options: [
+                    "a. The effects of break and continue statements can be achieved by structured programming techniques.",
+                    "b. break and continue statements can make a program perform faster than with the corresponding structured techniques.",
+                    "c. Many programmers feel that break and continue violate structured programming.",
+                    "d. You should always try to write the fastest, smallest code possible before attempting to make it simple and correct."
+                ],
+                answer: 3,
+                explanation: "العبارة (d) خاطئة؛ لأن القاعدة الهندسية السليمة هي كتابة كود بسيط وصحيح وواضح أولاً قبل التفكير في تحسين السرعة والحجم."
+            },
+            {
+                id: 96, chapter: 5, codeId: "5.8 Q1", section: "Section 5.8 Logical Operators",
+                question: "In C++, the condition ( 4 > y > 1 ):",
+                options: [
+                    "a. Evaluates correctly and could be replaced by ( 4 > y && y > 1 ).",
+                    "b. Does not evaluate correctly and should be replaced by ( 4 > y && y > 1 ).",
+                    "c. Evaluates correctly and could not be replaced by ( 4 > y && y > 1 ).",
+                    "d. Does not evaluate correctly and should not be replaced by ( 4 > y && y > 1 )."
+                ],
+                answer: 1,
+                explanation: "التعبير `(4 > y > 1)` لا يُقيم رياضياً بشكل صحيح في C++، ويجب استبداله بالمعامل المنطقي `(4 > y && y > 1)`."
+            },
+            {
+                id: 97, chapter: 5, codeId: "5.8 Q2", section: "Section 5.8 Logical Operators",
+                question: "The OR (||) operator:",
+                options: [
+                    "a. Has higher precedence than the AND (&&) operator.",
+                    "b. Stops evaluation upon finding one condition to be true.",
+                    "c. Associates from right to left.",
+                    "d. Is a ternary operator."
+                ],
+                answer: 1,
+                explanation: "معامل `||` يطبق التقييم المختصر (Short-circuit evaluation)، فيتوقف عن فحص باقي الشروط بمجرد إيجاد شرط واحد صحيح."
+            },
+            {
+                id: 98, chapter: 5, codeId: "5.8 Q3", section: "Section 5.8 Logical Operators",
+                question: "An operator that associates from right to left is:",
+                options: [
+                    "a. !=",
+                    "b. ,",
+                    "c. ()",
+                    "d. ?:"
+                ],
+                answer: 3,
+                explanation: "المعامل الشرطي الثلاثي `?:` ومعاملات الإسناد ترتبط من اليمين إلى اليسار (Right-to-left)."
+            },
+            {
+                id: 99, chapter: 5, codeId: "5.8 Q4", section: "Section 5.8 Logical Operators",
+                question: "The expression if ( num != 65 ) cannot be replaced by:",
+                options: [
+                    "a. if ( num > 65 || num < 65 )",
+                    "b. if ( !( num == 65 ) )",
+                    "c. if ( num - 65 )",
+                    "d. if ( !( num - 65 ) )"
+                ],
+                answer: 3,
+                explanation: "التعبير `!(num - 65)` يكون صحيحاً عندما يكون `num - 65` يساوي صفراً (أي `num == 65`)، وهو عكس الشرط المطلوب."
+            },
+            {
+                id: 100, chapter: 5, codeId: "5.8 Q5", section: "Section 5.8 Logical Operators",
+                question: "An example of a unary operator is:",
+                options: [
+                    "a. The < relational operator.",
+                    "b. The = assignment operator.",
+                    "c. The % arithmetic operator.",
+                    "d. The ! logical operator."
+                ],
+                answer: 3,
+                explanation: "معامل النفي المنطقي `!` (Logical negation) هو معامل أحادي (Unary operator) يعمل على معامل واحد فقط."
+            },
+            {
+                id: 101, chapter: 5, codeId: "5.9 Q1", section: "Section 5.9 Confusing Equality (==) and Assignment (=) Operators",
+                question: "Variables are also known as:",
+                options: [
+                    "a. lvalues, but can be used as rvalues.",
+                    "b. lvalues, and cannot be used as rvalues.",
+                    "c. rvalues, and cannot be used as lvalues.",
+                    "d. Constant variables."
+                ],
+                answer: 0,
+                explanation: "تُعرف المتغيرات بـ `lvalues` (لأنها تصلح للظهور على يسار معامل الإسناد)، ويمكن أيضاً استخدام قيمها كـ `rvalues` على يمين الإسناد."
+            },
+            {
+                id: 102, chapter: 5, codeId: "5.9 Q2", section: "Section 5.9 Confusing Equality (==) and Assignment (=) Operators",
+                question: "Consider the following code, assuming that x is an int with an initial value of 12. What is the output?",
+                code: "if ( x = 6 )\n   cout << x;",
+                options: [
+                    "a. 6",
+                    "b. 12",
+                    "c. Nothing.",
+                    "d. A syntax error is produced."
+                ],
+                answer: 0,
+                explanation: "في الشرط `x = 6` تم استخدام معامل الإسناد `=` بدلاً من `==`، فيُسند الرقم 6 إلى `x`، وبما أن 6 غير صفرية (true) يتحقق الشرط ويطبع `6`."
+            },
+            {
+                id: 103, chapter: 5, codeId: "5.9 Q3", section: "Section 5.9 Confusing Equality (==) and Assignment (=) Operators",
+                question: "Of the following, which is not a logic error?",
+                options: [
+                    "a. Not placing curly braces around the body of an if that contains two statements.",
+                    "b. Using == to assign a value to a variable.",
+                    "c. Failing to initialize counter and total variables before the body of a loop.",
+                    "d. Using commas instead of the two required semicolons in a for header."
+                ],
+                answer: 3,
+                explanation: "استخدام الفواصل العادية بدلاً من الفواصل المنقوطة في حلقة `for` هو خطأ قواعدي (Syntax error) يمنع الترجمة وليس خطأً منطقياً."
+            },
+            {
+                id: 104, chapter: 5, codeId: "5.10 Q1", section: "Section 5.10 Structured Programming Summary",
+                question: "The ________, ________ and ________ are the only three forms of control necessary.",
+                options: [
+                    "a. switch, if, else.",
+                    "b. sequence, selection, repetition.",
+                    "c. break, continue, if...else.",
+                    "d. for, while, do...while."
+                ],
+                answer: 1,
+                explanation: "أشكال التحكم الثلاثة الأساسية اللازمة لبناء أي برنامج مهيكل هي: التسلسل (sequence)، والاختيار (selection)، والتكرار (repetition)."
+            },
+            {
+                id: 105, chapter: 5, codeId: "5.10 Q2", section: "Section 5.10 Structured Programming Summary",
+                question: "Which of the following is not one of the C++ control structures?",
+                options: [
+                    "a. if",
+                    "b. switch",
+                    "c. break",
+                    "d. do...while"
+                ],
+                answer: 2,
+                explanation: "جملة `break` ليست هيكل تحكم مستقل بحد ذاتها، بل تستخدم للخروج من هياكل التكرار أو `switch`."
+            },
+            {
+                id: 106, chapter: 5, codeId: "5.10 Q3", section: "Section 5.10 Structured Programming Summary",
+                question: "Which of the following is not one of the rules for forming structured programs?",
+                options: [
+                    "a. Begin with the \"simplest activity diagram.\"",
+                    "b. Any transition arrow can be reversed.",
+                    "c. Any action state can be replaced by two action states in sequence.",
+                    "d. Any action state can be replaced by any control statement."
+                ],
+                answer: 1,
+                explanation: "عكس اتجاه أي سهم انتقال عشوائياً ليس من قواعد البرمجة المهيكلة لأنه يخلق تدفقات غير منظمة."
+            }
+        ];
+
+        // Normalize sequential IDs 1..N
+        questionsData.forEach((q, idx) => q.seqId = idx + 1);
+
+        // ==========================================
+        // Application State
+        // ==========================================
+        let state = {
+            quizMode: 'practice',      // 'practice' | 'exam'
+            examSubmitted: false,
+            viewMode: 'single',        // 'single' | 'list'
+            currentChapter: 'all',     // 'all' | 1 | 2 | 4 | 5
+            currentStatus: 'all',      // 'all' | 'unanswered' | 'correct' | 'wrong' | 'bookmarked'
+            searchQuery: '',
+            currentIndex: 0,           // Index within filteredQuestions
+            userAnswers: {},           // { [seqId]: selectedOptionIndex }
+            bookmarks: {}              // { [seqId]: boolean }
+        };
+
+        // Load saved progress from localStorage if available
+        function loadSavedState() {
+            try {
+                const savedAnswers = localStorage.getItem('cpp_quiz_answers');
+                const savedBookmarks = localStorage.getItem('cpp_quiz_bookmarks');
+                const savedTheme = localStorage.getItem('cpp_quiz_theme');
+                if (savedAnswers) state.userAnswers = JSON.parse(savedAnswers);
+                if (savedBookmarks) state.bookmarks = JSON.parse(savedBookmarks);
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.getElementById('themeIcon').className = 'fa-solid fa-sun text-lg';
+                }
+            } catch (e) {
+                console.warn('Could not access localStorage', e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem('cpp_quiz_answers', JSON.stringify(state.userAnswers));
+                localStorage.setItem('cpp_quiz_bookmarks', JSON.stringify(state.bookmarks));
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // Filtering Logic
+        // ==========================================
+        function getFilteredQuestions() {
+            return questionsData.filter(q => {
+                // Chapter filter
+                if (state.currentChapter !== 'all' && q.chapter !== state.currentChapter) {
+                    return false;
+                }
+                // Status filter
+                const ans = state.userAnswers[q.seqId];
+                const isAnswered = ans !== undefined;
+                const isCorrect = isAnswered && ans === q.answer;
+
+                if (state.currentStatus === 'unanswered' && isAnswered) return false;
+                if (state.currentStatus === 'correct' && (!isAnswered || !isCorrect)) return false;
+                if (state.currentStatus === 'wrong' && (!isAnswered || isCorrect)) return false;
+                if (state.currentStatus === 'bookmarked' && !state.bookmarks[q.seqId]) return false;
+
+                // Search query filter
+                if (state.searchQuery.trim() !== '') {
+                    const term = state.searchQuery.toLowerCase();
+                    const matchQuestion = q.question.toLowerCase().includes(term);
+                    const matchCodeId = q.codeId.toLowerCase().includes(term);
+                    const matchSection = q.section.toLowerCase().includes(term);
+                    const matchCode = q.code ? q.code.toLowerCase().includes(term) : false;
+                    const matchOptions = q.options.some(opt => opt.toLowerCase().includes(term));
+                    return matchQuestion || matchCodeId || matchSection || matchCode || matchOptions;
+                }
+
+                return true;
+            });
+        }
+
+        // ==========================================
+        // UI Rendering Functions
+        // ==========================================
+        function updateChapterCounts() {
+            const total = questionsData.length;
+            const c1 = questionsData.filter(q => q.chapter === 1).length;
+            const c2 = questionsData.filter(q => q.chapter === 2).length;
+            const c4 = questionsData.filter(q => q.chapter === 4).length;
+            const c5 = questionsData.filter(q => q.chapter === 5).length;
+
+            document.getElementById('chap-all').textContent = `الكل (${total})`;
+            document.getElementById('chap-1').textContent = `Chapter 1: مقدمة الحاسب و C++ (${c1})`;
+            document.getElementById('chap-2').textContent = `Chapter 2: أساسيات C++ والمعاملات (${c2})`;
+            document.getElementById('chap-4').textContent = `Chapter 4: جمل التحكم 1 (${c4})`;
+            document.getElementById('chap-5').textContent = `Chapter 5: جمل التحكم 2 والمنطقية (${c5})`;
+        }
+
+        function updateStats() {
+            const scopeQuestions = state.currentChapter === 'all'
+                ? questionsData
+                : questionsData.filter(q => q.chapter === state.currentChapter);
+
+            const total = scopeQuestions.length;
+            let answered = 0;
+            let correct = 0;
+            let wrong = 0;
+
+            scopeQuestions.forEach(q => {
+                const userAns = state.userAnswers[q.seqId];
+                if (userAns !== undefined) {
+                    answered++;
+                    if (userAns === q.answer) correct++;
+                    else wrong++;
+                }
+            });
+
+            const showScores = state.quizMode === 'practice' || state.examSubmitted;
+
+            document.getElementById('statAnswered').textContent = `${answered} / ${total}`;
+            document.getElementById('statCorrect').textContent = showScores ? correct : '—';
+            document.getElementById('statWrong').textContent = showScores ? wrong : '—';
+
+            const percent = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+            document.getElementById('statPercent').textContent = showScores ? `${percent}%` : '—';
+
+            // Progress bars
+            if (showScores) {
+                document.getElementById('progressBarCorrect').style.width = `${(correct / total) * 100}%`;
+                document.getElementById('progressBarWrong').style.width = `${(wrong / total) * 100}%`;
+                document.getElementById('progressBarPending').style.width = `0%`;
+            } else {
+                document.getElementById('progressBarCorrect').style.width = `0%`;
+                document.getElementById('progressBarWrong').style.width = `0%`;
+                document.getElementById('progressBarPending').style.width = `${(answered / total) * 100}%`;
+            }
+
+            // Show/hide Retry Wrong button
+            const retryBtn = document.getElementById('retryWrongBtn');
+            if (showScores && wrong > 0) {
+                retryBtn.classList.remove('hidden');
+            } else {
+                retryBtn.classList.add('hidden');
+            }
+
+            // Show/hide Submit Exam button
+            const submitExamBtn = document.getElementById('submitExamBtn');
+            if (state.quizMode === 'exam' && !state.examSubmitted) {
+                submitExamBtn.classList.remove('hidden');
+            } else {
+                submitExamBtn.classList.add('hidden');
+            }
+        }
+
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function renderQuestionCard(q, indexInFiltered, totalFiltered) {
+            const userAns = state.userAnswers[q.seqId];
+            const isAnswered = userAns !== undefined;
+            const showFeedback = (state.quizMode === 'practice' && isAnswered) || (state.quizMode === 'exam' && state.examSubmitted && isAnswered);
+            const isBookmarked = !!state.bookmarks[q.seqId];
+
+            let optionsHtml = q.options.map((optText, optIdx) => {
+                const isSelected = userAns === optIdx;
+                const isCorrectOption = q.answer === optIdx;
+
+                let btnClasses = "border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/80 hover:border-indigo-400 dark:hover:border-indigo-500 text-slate-800 dark:text-slate-200";
+                let badgeClasses = "bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300";
+                let statusIcon = "";
+
+                if (showFeedback) {
+                    if (isCorrectOption) {
+                        btnClasses = "border-emerald-500 bg-emerald-50/90 dark:bg-emerald-950/50 text-emerald-950 dark:text-emerald-200 ring-2 ring-emerald-500/20";
+                        badgeClasses = "bg-emerald-600 text-white";
+                        statusIcon = `<i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-lg shrink-0"></i>`;
+                    } else if (isSelected && !isCorrectOption) {
+                        btnClasses = "border-rose-500 bg-rose-50/90 dark:bg-rose-950/50 text-rose-950 dark:text-rose-200 ring-2 ring-rose-500/20";
+                        badgeClasses = "bg-rose-600 text-white";
+                        statusIcon = `<i class="fa-solid fa-circle-xmark text-rose-600 dark:text-rose-400 text-lg shrink-0"></i>`;
+                    } else {
+                        btnClasses = "border-slate-200 dark:border-slate-700/60 bg-slate-50/40 dark:bg-slate-800/40 opacity-65";
+                    }
+                } else if (isSelected) {
+                    // Exam mode before submission
+                    btnClasses = "border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-950 dark:text-indigo-200 ring-2 ring-indigo-500/20";
+                    badgeClasses = "bg-indigo-600 text-white";
+                    statusIcon = `<i class="fa-solid fa-check-circle text-indigo-600 dark:text-indigo-400 text-lg shrink-0"></i>`;
+                }
+
+                const letters = ['A', 'B', 'C', 'D'];
+                // Strip leading "a. ", "b. " from option display for cleaner badge layout
+                const cleanOptionText = escapeHtml(optText.replace(/^[a-dA-D]\.\s*/, ''));
+
+                return `
+                    <button 
+                        onclick="selectOption(${q.seqId}, ${optIdx})"
+                        class="option-btn w-full p-3.5 sm:p-4 rounded-xl border-2 text-left flex items-center justify-between gap-3 ltr-content ${btnClasses}"
+                    >
+                        <div class="flex items-start gap-3 min-w-0">
+                            <span class="w-7 h-7 rounded-lg font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 ${badgeClasses}">
+                                ${letters[optIdx]}
+                            </span>
+                            <span class="text-sm sm:text-base font-medium leading-relaxed break-words whitespace-pre-line font-en">${cleanOptionText}</span>
+                        </div>
+                        ${statusIcon}
+                    </button>
+                `;
+            }).join('');
+
+            const codeBlockHtml = q.code ? `
+                <div class="my-4 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 text-slate-100 shadow-inner">
+                    <div class="bg-slate-800 px-4 py-1.5 text-xs text-slate-400 flex items-center justify-between border-b border-slate-700">
+                        <span class="font-mono"><i class="fa-solid fa-terminal mr-1.5 text-indigo-400"></i>C++ Code Snippet</span>
+                        <span class="text-[11px] uppercase tracking-wider">LTR</span>
+                    </div>
+                    <pre class="p-4 text-xs sm:text-sm overflow-x-auto code-snippet leading-relaxed text-emerald-300"><code>${escapeHtml(q.code)}</code></pre>
+                </div>
+            ` : '';
+
+            const explanationHtml = showFeedback ? `
+                <div class="mt-5 p-4 rounded-xl ${userAns === q.answer ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60' : 'bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60'}">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg ${userAns === q.answer ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/20 text-amber-600 dark:text-amber-400'} flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <div class="text-sm leading-relaxed">
+                            <div class="font-bold mb-1 ${userAns === q.answer ? 'text-emerald-800 dark:text-emerald-300' : 'text-amber-800 dark:text-amber-300'}">
+                                ${userAns === q.answer ? 'إجابة صحيحة! أحسنت.' : `إجابة غير صحيحة — الخيار الصحيح هو (${['A', 'B', 'C', 'D'][q.answer]})`}
+                            </div>
+                            <p class="text-slate-700 dark:text-slate-300">${q.explanation}</p>
+                        </div>
+                    </div>
+                </div>
+            ` : '';
+
+            const navButtonsHtml = state.viewMode === 'single' ? `
+                <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-3">
+                    <button 
+                        onclick="navigateQuestion(-1)" 
+                        ${indexInFiltered === 0 ? 'disabled' : ''}
+                        class="px-4 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${indexInFiltered === 0 ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-slate-100 dark:bg-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200'}"
+                    >
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <span>السؤال السابق</span>
+                    </button>
+
+                    <span class="text-xs sm:text-sm font-bold text-slate-400">
+                        ${indexInFiltered + 1} من ${totalFiltered}
+                    </span>
+
+                    <button 
+                        onclick="navigateQuestion(1)" 
+                        ${indexInFiltered === totalFiltered - 1 ? 'disabled' : ''}
+                        class="px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${indexInFiltered === totalFiltered - 1 ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-500/20'}"
+                    >
+                        <span>السؤال التالي</span>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                </div>
+            ` : '';
+
+            return `
+                <article id="q-card-${q.seqId}" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm p-5 sm:p-6 transition-all">
+                    <!-- Card Header -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 border-b border-slate-100 dark:border-slate-700/70">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="px-3 py-1 rounded-lg bg-indigo-600 text-white font-mono font-bold text-xs">
+                                #${q.seqId}
+                            </span>
+                            <span class="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 font-mono font-semibold text-xs">
+                                ${q.codeId}
+                            </span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 font-en ltr-content truncate max-w-xs sm:max-w-md">
+                                ${q.section}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            ${isAnswered ? `
+                                <button onclick="clearSingleAnswer(${q.seqId})" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-rose-600 transition-colors" title="إعادة محاولة هذا السؤال">
+                                    <i class="fa-solid fa-rotate-left ml-1"></i>إعادة
+                                </button>
+                            ` : ''}
+                            <button 
+                                onclick="toggleBookmark(${q.seqId})" 
+                                class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${isBookmarked ? 'bg-amber-100 dark:bg-amber-950 text-amber-500' : 'bg-slate-100 dark:bg-slate-700 text-slate-400 hover:text-amber-500'}"
+                                title="حفظ السؤال للمراجعة"
+                            >
+                                <i class="fa-${isBookmarked ? 'solid' : 'regular'} fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Text (LTR) -->
+                    <div class="ltr-content mb-4">
+                        <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 leading-relaxed font-en">
+                            ${escapeHtml(q.question)}
+                        </h2>
+                        ${codeBlockHtml}
+                    </div>
+
+                    <!-- Options List -->
+                    <div class="space-y-2.5">
+                        ${optionsHtml}
+                    </div>
+
+                    <!-- Explanation Box -->
+                    ${explanationHtml}
+
+                    <!-- Single View Footer Navigation -->
+                    ${navButtonsHtml}
+                </article>
+            `;
+        }
+
+        function renderQuestionMap(filteredQuestions) {
+            const grid = document.getElementById('questionMapGrid');
+            document.getElementById('filteredCountBadge').textContent = `${filteredQuestions.length} سؤال`;
+
+            if (filteredQuestions.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-4 text-xs text-slate-400">لا توجد أسئلة مطابقة</div>`;
+                return;
+            }
+
+            const showScores = state.quizMode === 'practice' || state.examSubmitted;
+
+            grid.innerHTML = filteredQuestions.map((q, idx) => {
+                const userAns = state.userAnswers[q.seqId];
+                const isCurrent = state.viewMode === 'single' && idx === state.currentIndex;
+                const isBookmarked = !!state.bookmarks[q.seqId];
+
+                let colorClass = "bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300 hover:bg-slate-200";
+
+                if (userAns !== undefined) {
+                    if (showScores) {
+                        colorClass = userAns === q.answer
+                            ? "bg-emerald-500 text-white font-bold shadow-sm"
+                            : "bg-rose-500 text-white font-bold shadow-sm";
+                    } else {
+                        colorClass = "bg-indigo-500 text-white font-bold";
+                    }
+                }
+
+                const activeRing = isCurrent ? "ring-2 ring-offset-2 ring-indigo-600 dark:ring-offset-slate-800 scale-105" : "";
+
+                return `
+                    <button 
+                        onclick="jumpToQuestion(${idx}, ${q.seqId})"
+                        class="relative h-9 rounded-lg font-mono text-xs flex items-center justify-center transition-all ${colorClass} ${activeRing}"
+                        title="${q.codeId}"
+                    >
+                        ${q.seqId}
+                        ${isBookmarked ? '<span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 border border-white dark:border-slate-800"></span>' : ''}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function renderApp() {
+            const filtered = getFilteredQuestions();
+            const container = document.getElementById('questionsContainer');
+
+            // Clamp currentIndex
+            if (state.currentIndex >= filtered.length) {
+                state.currentIndex = Math.max(0, filtered.length - 1);
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-12 text-center">
+                        <div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-700 text-slate-400 flex items-center justify-center text-2xl mx-auto mb-4">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">لا توجد أسئلة مطابقة للفلتر الحالي</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">جرب تغيير الفصل أو حالة الأسئلة أو مسح كلمة البحث.</p>
+                        <button onclick="resetFilters()" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-bold hover:bg-indigo-700 transition-all">
+                            إظهار جميع الأسئلة
+                        </button>
+                    </div>
+                `;
+            } else if (state.viewMode === 'single') {
+                const currentQ = filtered[state.currentIndex];
+                container.innerHTML = renderQuestionCard(currentQ, state.currentIndex, filtered.length);
+            } else {
+                container.innerHTML = filtered.map((q, idx) => renderQuestionCard(q, idx, filtered.length)).join('');
+            }
+
+            renderQuestionMap(filtered);
+            updateStats();
+        }
+
+        // ==========================================
+        // User Interaction Handlers
+        // ==========================================
+        function selectOption(seqId, optionIndex) {
+            if (state.quizMode === 'exam' && state.examSubmitted) return;
+            state.userAnswers[seqId] = optionIndex;
+            saveState();
+            renderApp();
+        }
+
+        function clearSingleAnswer(seqId) {
+            delete state.userAnswers[seqId];
+            saveState();
+            renderApp();
+        }
+
+        function toggleBookmark(seqId) {
+            state.bookmarks[seqId] = !state.bookmarks[seqId];
+            if (!state.bookmarks[seqId]) delete state.bookmarks[seqId];
+            saveState();
+            renderApp();
+        }
+
+        function navigateQuestion(direction) {
+            const filtered = getFilteredQuestions();
+            const nextIndex = state.currentIndex + direction;
+            if (nextIndex >= 0 && nextIndex < filtered.length) {
+                state.currentIndex = nextIndex;
+                renderApp();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function jumpToQuestion(indexInFiltered, seqId) {
+            if (state.viewMode === 'single') {
+                state.currentIndex = indexInFiltered;
+                renderApp();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                const el = document.getElementById(`q-card-${seqId}`);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function filterByChapter(chapter) {
+            state.currentChapter = chapter;
+            state.currentIndex = 0;
+
+            document.querySelectorAll('.chapter-tab').forEach(btn => {
+                btn.className = "chapter-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 dark:bg-slate-700/70 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-all";
+            });
+            const activeBtn = document.getElementById(`chap-${chapter}`);
+            if (activeBtn) {
+                activeBtn.className = "chapter-tab shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-sm transition-all";
+            }
+
+            renderApp();
+        }
+
+        function filterByStatus(status) {
+            state.currentStatus = status;
+            state.currentIndex = 0;
+
+            document.querySelectorAll('.status-tab').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-indigo-500', 'bg-slate-800', 'text-white', 'dark:bg-slate-200', 'dark:text-slate-900');
+            });
+
+            const activeBtn = document.getElementById(`status-${status}`);
+            if (activeBtn) {
+                activeBtn.classList.add('ring-2', 'ring-indigo-500');
+            }
+
+            renderApp();
+        }
+
+        function handleSearch(value) {
+            state.searchQuery = value;
+            state.currentIndex = 0;
+            renderApp();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            state.searchQuery = '';
+            filterByStatus('all');
+            filterByChapter('all');
+        }
+
+        function setQuizMode(mode) {
+            state.quizMode = mode;
+            state.examSubmitted = false;
+
+            const practiceBtn = document.getElementById('modePracticeBtn');
+            const examBtn = document.getElementById('modeExamBtn');
+
+            if (mode === 'practice') {
+                practiceBtn.className = "px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all flex items-center gap-1.5";
+                examBtn.className = "px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all flex items-center gap-1.5";
+            } else {
+                examBtn.className = "px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all flex items-center gap-1.5";
+                practiceBtn.className = "px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all flex items-center gap-1.5";
+            }
+
+            renderApp();
+        }
+
+        function submitExam() {
+            state.examSubmitted = true;
+            renderApp();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setViewMode(mode) {
+            state.viewMode = mode;
+            const singleBtn = document.getElementById('viewSingleBtn');
+            const listBtn = document.getElementById('viewListBtn');
+
+            if (mode === 'single') {
+                singleBtn.className = "px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all";
+                listBtn.className = "px-2.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all";
+            } else {
+                listBtn.className = "px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all";
+                singleBtn.className = "px-2.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-indigo-600 transition-all";
+            }
+
+            renderApp();
+        }
+
+        function openResetModal() {
+            document.getElementById('resetModal').classList.remove('hidden');
+        }
+
+        function closeResetModal() {
+            document.getElementById('resetModal').classList.add('hidden');
+        }
+
+        function resetProgress(type) {
+            if (type === 'all') {
+                state.userAnswers = {};
+                state.examSubmitted = false;
+            } else if (type === 'wrong') {
+                questionsData.forEach(q => {
+                    if (state.userAnswers[q.seqId] !== undefined && state.userAnswers[q.seqId] !== q.answer) {
+                        delete state.userAnswers[q.seqId];
+                    }
+                });
+            }
+            saveState();
+            closeResetModal();
+            if (state.currentStatus === 'wrong') {
+                filterByStatus('all');
+            } else {
+                renderApp();
+            }
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-lg';
+                try { localStorage.setItem('cpp_quiz_theme', 'light'); } catch (e) {}
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-lg';
+                try { localStorage.setItem('cpp_quiz_theme', 'dark'); } catch (e) {}
+            }
+        }
+
+        // Keyboard navigation support in Single Card Mode
+        window.addEventListener('keydown', (e) => {
+            if (document.activeElement.tagName === 'INPUT') return;
+            if (state.viewMode !== 'single') return;
+
+            const filtered = getFilteredQuestions();
+            if (filtered.length === 0) return;
+            const currentQ = filtered[state.currentIndex];
+
+            if (e.key === 'ArrowLeft') {
+                navigateQuestion(1);
+            } else if (e.key === 'ArrowRight') {
+                navigateQuestion(-1);
+            } else if (['1', '2', '3', '4'].includes(e.key)) {
+                const idx = parseInt(e.key, 10) - 1;
+                if (idx < currentQ.options.length) {
+                    selectOption(currentQ.seqId, idx);
+                }
+            }
+        });
+
+        // Initialize on load
+        window.onload = function () {
+            loadSavedState();
+            updateChapterCounts();
+            renderApp();
+        };
+    </script>
+</body>
+</html>
